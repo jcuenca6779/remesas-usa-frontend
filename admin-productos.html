@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#071a42" />
+  <title>Administrar productos ecuatorianos | Remesas USA</title><link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-body " data-admin-page="catalog" data-admin-line="ecuador">
+  <aside class="admin-sidebar" id="adminSidebar">
+    <a class="admin-brand" href="index.html"><img src="assets/logo.png" alt="Remesas USA" /><div><strong>REMESAS USA</strong><span>Panel administrativo</span></div></a>
+    <nav class="admin-nav"><a class="admin-nav-item" href="admin.html"><span>▦</span><div><b>Resumen</b><small>Vista general</small></div></a><a class="admin-nav-item active" href="admin-productos.html"><span>🇪🇨</span><div><b>Productos</b><small>Catálogo Ecuador</small></div></a><a class="admin-nav-item " href="admin-perfumes.html"><span>✨</span><div><b>Perfumes</b><small>Perfumería</small></div></a><a class="admin-nav-item" href="admin-estadisticas.html"><span>↗</span><div><b>Estadísticas</b><small>Rendimiento</small></div></a></nav>
+    <div class="sidebar-bottom"><div class="demo-notice "><b>Catálogo Ecuador</b><p>Esta vista administra únicamente productos ecuatorianos.</p></div><a href="productos.html" class="sidebar-link">← Ver catálogo público</a></div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar"><div class="admin-title-wrap"><button class="sidebar-toggle" id="sidebarToggle" aria-label="Abrir menú">☰</button><div><span class="breadcrumb">ADMIN / CATÁLOGO ECUADOR</span><h1>Productos ecuatorianos</h1></div></div><div class="admin-user"><div class="admin-user-copy"><b>Administrador</b><span>Cargando...</span></div><div class="avatar ">RU</div></div></header>
+    <main class="admin-content">
+      <section class="admin-section-head separated-head"><div><span class="eyebrow ">🇪🇨 CATÁLOGO ECUADOR</span><h2>Administrar productos ecuatorianos</h2><p>Gestiona productos, imágenes, categorías, disponibilidad y artículos archivados.</p></div><div class="admin-head-actions"><button id="manageCategoriesBtn" class="btn btn-light">⚙ Categorías</button><button id="addItemBtn" class="btn btn-red">+ Agregar producto</button></div></section>
+
+      <div class="catalog-admin-stats" id="catalogAdminStats"></div>
+
+      <article class="panel-card table-panel ">
+        <div class="product-table-toolbar catalog-toolbar-admin">
+          <label class="admin-search"><span>⌕</span><input id="adminSearch" type="search" placeholder="Buscar producto ecuatoriano..." /></label>
+          <select id="adminStatusFilter" class="admin-filter-select"><option value="">Todos los estados</option><option value="active">Activos</option><option value="archived">Archivados</option><option value="featured">Destacados</option><option value="available">Disponibles</option><option value="low_stock">Pocas unidades</option><option value="out_of_stock">Agotados</option></select>
+          <select id="adminCategoryFilter" class="admin-filter-select"><option value="">Todas las categorías</option></select>
+          <div class="toolbar-actions"><span id="adminCount" class="small-muted"></span><a href="productos.html" class="btn btn-light btn-small">Ver catálogo ↗</a></div>
+        </div>
+        <div class="table-wrap"><table class="product-table"><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Estado</th><th>Vistas</th><th>Consultas</th><th>Acciones</th></tr></thead><tbody id="itemTableBody"></tbody></table></div>
+      </article>
+    </main>
+  </div>
+
+  <div id="itemEditorModal" class="modal admin-modal" aria-hidden="true"><div class="modal-backdrop" data-close-editor></div><article class="modal-card editor-card " role="dialog" aria-modal="true" aria-labelledby="editorTitle"><div class="editor-head"><div><small>PRODUCTOS ECUATORIANOS</small><h2 id="editorTitle">Agregar producto</h2></div><button class="modal-close static-close" data-close-editor>×</button></div><form id="itemForm" class="product-form"><input type="hidden" id="itemId" /><div class="form-grid">
+    <label class="form-field form-span-2"><span>Nombre del producto</span><input id="itemName" required placeholder="Ej. Chifles de plátano" /></label>
+    <label class="form-field"><span>Marca</span><input id="itemBrand" placeholder="Ej. La Universal" /></label>
+    <label class="form-field"><span>Categoría</span><select id="itemCategory" required></select></label>
+    <label class="form-field"><span>Precio (USD)</span><input id="itemPrice" type="number" min="0" step="0.01" required placeholder="3.99" /></label>
+    <label class="form-field"><span>Disponibilidad</span><select id="itemStock"><option value="available">Disponible</option><option value="low_stock">Pocas unidades</option><option value="out_of_stock">Agotado</option></select></label>
+    <label class="form-field form-span-2"><span>Descripción</span><textarea id="itemDescription" rows="3" placeholder="Descripción breve del producto..."></textarea></label>
+    <label class="form-field form-span-2 file-field"><span>Fotografía</span><input id="itemImageFile" type="file" accept="image/jpeg,image/png,image/webp" /><small>JPG, PNG o WebP. El backend optimiza la imagen y la guarda en Supabase Storage.</small></label>
+    <label class="check-field form-span-2"><input id="itemFeatured" type="checkbox" /><span><b>Producto destacado</b><small>Se mostrará primero y con una etiqueta especial.</small></span></label>
+  </div><div class="editor-actions"><button type="button" class="btn btn-light" data-close-editor>Cancelar</button><button type="submit" class="btn btn-red">Guardar producto</button></div></form></article></div>
+
+  <div id="categoryModal" class="modal admin-modal" aria-hidden="true"><div class="modal-backdrop" data-close-categories></div><article class="modal-card category-card"><div class="editor-head"><div><small>PRODUCTOS ECUATORIANOS</small><h2>Gestionar categorías</h2></div><button class="modal-close static-close" data-close-categories>×</button></div><form id="categoryForm" class="category-create-form"><label class="form-field"><span>Nombre de categoría</span><input id="categoryNameInput" required placeholder="Ej. Snacks y dulces" /></label><button id="categorySubmitBtn" class="btn btn-red" type="submit">Agregar categoría</button></form><div id="categoryManagerList" class="category-manager-list"></div></article></div>
+
+  <div id="confirmModal" class="modal" aria-hidden="true"><div class="modal-backdrop" data-close-confirm></div><article class="confirm-card"><div class="confirm-icon">!</div><h3 id="confirmTitle">¿Archivar?</h3><p id="confirmText"></p><div class="confirm-actions"><button class="btn btn-light" data-close-confirm>Cancelar</button><button id="confirmActionBtn" class="btn btn-red">Archivar</button></div></article></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="config.js"></script><script src="api.js"></script><script src="admin-session.js"></script><script src="ui.js"></script><script src="admin-catalog.js"></script>
+</body>
+</html>

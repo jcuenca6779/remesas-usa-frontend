@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#071a42" />
+  <title>Administrador | Remesas USA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="admin-login-body">
+  <div class="login-orb login-orb-a"></div><div class="login-orb login-orb-b"></div>
+  <main class="admin-login-shell">
+    <a class="login-brand" href="index.html"><img src="assets/logo.png" alt="Remesas USA" /><div><strong>REMESAS USA</strong><span>Panel administrativo</span></div></a>
+    <section class="panel-card login-card">
+      <div class="login-icon">↗</div>
+      <span class="eyebrow">ACCESO PRIVADO</span>
+      <h1>Bienvenido de nuevo</h1>
+      <p>Ingresa tus credenciales para administrar productos, perfumes y estadísticas.</p>
+      <form id="loginForm">
+        <label class="form-field"><span>Correo electrónico</span><input id="loginEmail" type="email" autocomplete="username" required placeholder="admin@remesasusa.com" /></label>
+        <label class="form-field"><span>Contraseña</span><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••••••" /></label>
+        <p id="loginError" class="login-error" hidden></p>
+        <button id="loginButton" class="btn btn-red login-button" type="submit">Ingresar al panel</button>
+      </form>
+      <div class="login-security"><span>🔒</span><small>Acceso protegido mediante autenticación del administrador.</small></div>
+      <a href="index.html" class="login-back">← Volver a Remesas USA</a>
+    </section>
+  </main>
+  <script src="config.js"></script><script src="api.js"></script><script src="admin-login.js"></script>
+</body>
+</html>
