@@ -2,7 +2,7 @@
   const api = window.RemesasAPI;
 
   const ECUADOR_PROMO_IMAGE =
-    "assets/hero-ecuador-bandera.webp";
+    "assets/hero-ecuador-bandera.png";
 
   const PERFUME_PROMO_IMAGE =
     "assets/perfumesfoto.jpg";
