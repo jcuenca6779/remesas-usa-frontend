@@ -1179,59 +1179,6 @@ section[id],
    Transiciones nativas entre páginas
    Sin librerías: el navegador compone transform + opacity.
    --------------------------------------------------------- */
-@view-transition {
-  navigation: auto;
-}
-
-.site-header {
-  view-transition-name: remesas-header;
-}
-
-main {
-  view-transition-name: remesas-page;
-}
-
-.site-footer {
-  view-transition-name: remesas-footer;
-}
-
-::view-transition-old(remesas-header),
-::view-transition-new(remesas-header),
-::view-transition-old(remesas-footer),
-::view-transition-new(remesas-footer) {
-  animation-duration: 220ms;
-  animation-timing-function: cubic-bezier(.2, .8, .2, 1);
-}
-
-::view-transition-old(remesas-page) {
-  animation: remesas-page-out 160ms cubic-bezier(.4, 0, 1, 1) both;
-}
-
-::view-transition-new(remesas-page) {
-  animation: remesas-page-in 320ms cubic-bezier(.16, 1, .3, 1) both;
-}
-
-@keyframes remesas-page-out {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-8px) scale(.995);
-  }
-}
-
-@keyframes remesas-page-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(.995);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 
 /* Microtransición de entrada de secciones: solo compositor. */
 .reveal-on-scroll {
@@ -1259,15 +1206,6 @@ main {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(remesas-header),
-  ::view-transition-new(remesas-header),
-  ::view-transition-old(remesas-page),
-  ::view-transition-new(remesas-page),
-  ::view-transition-old(remesas-footer),
-  ::view-transition-new(remesas-footer) {
-    animation: none !important;
-  }
-
   .reveal-on-scroll {
     will-change: auto;
   }
