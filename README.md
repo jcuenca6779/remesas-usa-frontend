@@ -1,6 +1,22 @@
-# Remesas USA — Frontend V4
+# Remesas USA — Frontend V7 Profesional
 
-Frontend conectado al backend FastAPI de Remesas USA.
+Frontend público y administrativo conectado al backend FastAPI de Remesas USA.
+
+Esta versión mantiene la integración existente con Render/Supabase y añade un acabado comercial más profesional en las páginas públicas.
+
+## Novedades V7
+
+- Los héroes y tarjetas de portada reutilizan automáticamente fotografías reales del catálogo cuando existen.
+- Los héroes de Productos Ecuatorianos y Perfumería muestran hasta tres imágenes reales destacadas.
+- Fallback visual automático cuando una imagen falta, fue eliminada o devuelve error.
+- Imágenes de producto en modo ecommerce (`object-fit: contain`) para no cortar botellas, etiquetas ni empaques.
+- Enlaces profundos para compartir artículos: `productos.html?p=ID` y `perfumes.html?p=ID`.
+- El botón Compartir genera un enlace directo al producto y abre su modal al visitar el enlace.
+- Mejor navegación por teclado y focus trap básico dentro del modal.
+- Accesos administrativos eliminados de la interfaz pública. El panel sigue disponible por URL directa.
+- Metadatos Open Graph básicos, robots y datos estructurados del local.
+- Mejor soporte para `prefers-reduced-motion`.
+- Mensajes de error públicos sin exponer detalles internos de FastAPI.
 
 ## Incluye
 

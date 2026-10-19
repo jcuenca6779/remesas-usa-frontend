@@ -21,7 +21,7 @@
   function getSessionId() {
     let value = localStorage.getItem(SESSION_KEY);
     if (!value) {
-      value = crypto.randomUUID();
+      value = crypto.randomUUID ? crypto.randomUUID() : `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`;
       localStorage.setItem(SESSION_KEY, value);
     }
     return value;
@@ -76,7 +76,7 @@
       response = await fetch(`${API_BASE}${path}`, options);
     } catch (networkError) {
       const error = new Error(
-        "No se pudo conectar con el backend. Verifica que FastAPI esté ejecutándose en el puerto 8000."
+        "No pudimos conectar con el catálogo en este momento. Intenta nuevamente en unos segundos."
       );
       error.cause = networkError;
       throw error;

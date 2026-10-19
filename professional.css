@@ -1,0 +1,1274 @@
+
+
+/* =========================================================
+   REMESAS USA · PROFESSIONAL EXPERIENCE LAYER
+   Diseño refinado, microinteracciones y accesibilidad
+   ========================================================= */
+
+:root {
+  --pro-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pro-ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --pro-ring: 0 0 0 4px rgba(33, 101, 216, 0.18);
+  --pro-glass: rgba(255, 255, 255, 0.78);
+  --pro-glass-dark: rgba(7, 26, 66, 0.78);
+  --pro-line: rgba(148, 163, 184, 0.22);
+}
+
+html {
+  scroll-padding-top: 96px;
+}
+
+.site-body {
+  background:
+    radial-gradient(circle at 8% 8%, rgba(33, 101, 216, 0.045), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(245, 200, 75, 0.055), transparent 28%),
+    #ffffff;
+}
+
+.site-body ::selection {
+  background: rgba(33, 101, 216, 0.18);
+  color: var(--navy);
+}
+
+.site-body a,
+.site-body button,
+.site-body input,
+.site-body select,
+.site-body [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(33, 101, 216, 0.08);
+}
+
+.site-body :is(a, button, input, select, textarea, [role="button"]):focus-visible {
+  outline: 3px solid rgba(33, 101, 216, 0.48);
+  outline-offset: 3px;
+}
+
+.perfume-catalog :is(a, button, input, select, textarea, [role="button"]):focus-visible {
+  outline-color: rgba(212, 175, 55, 0.72);
+}
+
+.site-body h1,
+.site-body h2,
+.site-body h3 {
+  text-wrap: balance;
+}
+
+.site-body p,
+.site-body small {
+  text-wrap: pretty;
+}
+
+.site-body [id] {
+  scroll-margin-top: 104px;
+}
+
+/* Skip link injected from ui.js */
+.skip-to-content {
+  position: fixed;
+  left: 18px;
+  top: 12px;
+  z-index: 10050;
+  padding: 11px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 16px 38px rgba(7, 26, 66, 0.22);
+  transform: translateY(-160%);
+  transition: transform 180ms ease;
+}
+
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------
+   Correcciones de interacción según Web Interface Guidelines
+   --------------------------------------------------------- */
+.site-body .nav-links a {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+.site-body .featured-tab,
+.site-body .filter-btn {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+}
+
+/* ---------------------------------------------------------
+   Header & navegación
+   --------------------------------------------------------- */
+.site-header {
+  transition:
+    height 260ms var(--pro-ease),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+body.scrolled .site-header {
+  height: 74px;
+  border-bottom-color: rgba(148, 163, 184, 0.18);
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(33, 101, 216, 0.26), transparent);
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+body.scrolled .site-header::after {
+  opacity: 1;
+}
+
+.nav-links > a:not(.nav-cta-btn) {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-links > a:not(.nav-cta-btn)::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0.72;
+  transition: transform 240ms var(--pro-ease);
+}
+
+.nav-links > a:not(.nav-cta-btn):hover::after,
+.nav-links > a:not(.nav-cta-btn).active::after,
+.nav-links > a:not(.nav-cta-btn).section-active::after {
+  transform: scaleX(1);
+}
+
+.landing-page .nav-links > a.section-active {
+  background: #eff6ff;
+  color: var(--blue);
+}
+
+.nav-cta-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.nav-cta-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.38) 48%, transparent 76%);
+  transform: translateX(-125%);
+  transition: transform 560ms var(--pro-ease);
+}
+
+.nav-cta-btn:hover::before {
+  transform: translateX(125%);
+}
+
+/* ---------------------------------------------------------
+   Botones premium: microinteracciones sin JS pesado
+   --------------------------------------------------------- */
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    rgba(255, 255, 255, 0.34),
+    transparent 38%
+  );
+  transition: opacity 180ms ease;
+}
+
+.btn:hover::after {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+/* ---------------------------------------------------------
+   Landing hero: profundidad, identidad & movimiento controlado
+   --------------------------------------------------------- */
+.landing-hero {
+  min-height: min(760px, calc(100vh - 124px));
+  display: flex;
+  align-items: center;
+}
+
+.landing-hero::before {
+  content: "BRONX  •  ECUADOR";
+  position: absolute;
+  right: -3vw;
+  bottom: -0.12em;
+  z-index: -2;
+  font-size: clamp(72px, 12vw, 180px);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  font-weight: 900;
+  color: rgba(7, 26, 66, 0.027);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.landing-copy {
+  position: relative;
+}
+
+.landing-copy::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  left: -54px;
+  top: -44px;
+  border-radius: 50%;
+  border: 1px solid rgba(33, 101, 216, 0.08);
+  box-shadow:
+    0 0 0 18px rgba(33, 101, 216, 0.025),
+    0 0 0 36px rgba(33, 101, 216, 0.016);
+  pointer-events: none;
+}
+
+.landing-copy h1 {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.landing-copy h1 em:first-of-type {
+  background: linear-gradient(110deg, #d91f32 0%, #e24b35 52%, #c71930 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.landing-copy h1 em:last-of-type {
+  background: linear-gradient(110deg, #0a2e76, #2165d8 58%, #0b3a8f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-pill-badge {
+  box-shadow: 0 7px 24px rgba(11, 58, 143, 0.07);
+}
+
+.landing-trust-row span {
+  transition:
+    transform 220ms var(--pro-ease),
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.landing-trust-row span:hover {
+  transform: translateY(-2px);
+  border-color: rgba(33, 101, 216, 0.2);
+  box-shadow: 0 10px 26px rgba(7, 26, 66, 0.08);
+}
+
+.hero-showcase {
+  transform-style: preserve-3d;
+  transform:
+    perspective(1200px)
+    rotateX(var(--hero-tilt-x, 0deg))
+    rotateY(var(--hero-tilt-y, 0deg));
+  transition: transform 280ms var(--pro-ease);
+}
+
+.hero-showcase::after {
+  content: "";
+  position: absolute;
+  inset: 8% 4%;
+  z-index: -1;
+  border-radius: 40px;
+  background: radial-gradient(
+    circle at var(--hero-glow-x, 50%) var(--hero-glow-y, 45%),
+    rgba(33, 101, 216, 0.18),
+    rgba(245, 200, 75, 0.09) 34%,
+    transparent 62%
+  );
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.showcase-card {
+  isolation: isolate;
+}
+
+.showcase-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.18), transparent 33%),
+    radial-gradient(circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255,255,255,.18), transparent 34%);
+  opacity: 0.72;
+}
+
+.showcase-live-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7,26,66,.02), rgba(7,26,66,.22));
+  pointer-events: none;
+}
+
+.showcase-badge {
+  transition:
+    transform 280ms var(--pro-ease),
+    box-shadow 280ms ease;
+}
+
+.hero-showcase:hover .showcase-badge {
+  transform: translate(-50%, -50%) scale(1.045);
+  box-shadow: 0 28px 62px rgba(7, 26, 66, 0.28);
+}
+
+/* Detenemos movimiento continuo después de una breve presentación */
+.floating-orb,
+.catalog-orb,
+.showcase-ecuador,
+.showcase-perfume,
+.hero-product-cloud span,
+.hero-spark,
+.about-float-card {
+  animation-iteration-count: 2 !important;
+}
+
+/* ---------------------------------------------------------
+   Benefits: más carácter y lectura más rápida
+   --------------------------------------------------------- */
+.home-benefits {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 50%, rgba(33, 101, 216, 0.24), transparent 28%),
+    radial-gradient(circle at 88% 40%, rgba(225, 29, 72, 0.12), transparent 26%),
+    linear-gradient(120deg, #06152f, #071a42 50%, #0b2c68);
+}
+
+.home-benefits::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  pointer-events: none;
+}
+
+.benefit-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.benefit-grid article {
+  position: relative;
+  transition:
+    transform 240ms var(--pro-ease),
+    background-color 240ms ease;
+}
+
+.benefit-grid article:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.benefit-grid article > span {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+/* ---------------------------------------------------------
+   Choice cards: spotlight & acentos de marca
+   --------------------------------------------------------- */
+.choice-card {
+  transform:
+    perspective(950px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translateY(var(--lift-y, 0px));
+}
+
+.choice-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  background: radial-gradient(
+    420px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(255, 255, 255, 0.22),
+    transparent 38%
+  );
+  transition: opacity 220ms ease;
+}
+
+.choice-card:hover::before {
+  opacity: 1;
+}
+
+.choice-card:hover {
+  --lift-y: -6px;
+}
+
+.choice-card-copy {
+  position: relative;
+}
+
+.choice-card-copy::before {
+  content: "";
+  position: absolute;
+  left: 30px;
+  top: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--ru-yellow), var(--ru-red));
+}
+
+.choice-perfume .choice-card-copy::before {
+  background: linear-gradient(90deg, var(--perfume2), var(--perfume));
+}
+
+.choice-tags span {
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.choice-tags span:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------
+   Section headings & destacados
+   --------------------------------------------------------- */
+.centered-heading,
+.featured-live-head > div:first-child {
+  position: relative;
+}
+
+.centered-heading::after {
+  content: "";
+  display: block;
+  width: 68px;
+  height: 4px;
+  margin: 18px auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--ru-red), var(--ru-yellow), var(--blue2));
+}
+
+.featured-live-section {
+  position: relative;
+  overflow: clip;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(33, 101, 216, 0.065), transparent 30%),
+    radial-gradient(circle at 90% 90%, rgba(225, 29, 72, 0.045), transparent 26%),
+    #f8fafc;
+}
+
+.featured-tabs {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+
+/* ---------------------------------------------------------
+   Product cards: ecommerce premium con brillo localizado
+   --------------------------------------------------------- */
+.product-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform:
+    perspective(900px)
+    translateY(var(--product-lift, 0px));
+}
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    360px circle at var(--card-glow-x, 50%) var(--card-glow-y, 20%),
+    rgba(33, 101, 216, 0.09),
+    transparent 44%
+  );
+  transition: opacity 220ms ease;
+}
+
+.perfume-card::before {
+  background: radial-gradient(
+    360px circle at var(--card-glow-x, 50%) var(--card-glow-y, 20%),
+    rgba(212, 175, 55, 0.14),
+    transparent 44%
+  );
+}
+
+.product-card:hover::before {
+  opacity: 1;
+}
+
+.product-card:hover {
+  --product-lift: -7px;
+}
+
+.product-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,.68) 48%, transparent 70%);
+  transform: translateX(-140%);
+  transition: transform 720ms var(--pro-ease);
+}
+
+.product-card:hover .product-visual::after {
+  transform: translateX(140%);
+}
+
+.product-body h3 {
+  transition: color 180ms ease;
+}
+
+.product-card:hover .product-body h3 {
+  color: var(--blue);
+}
+
+.perfume-card:hover .product-body h3 {
+  color: var(--perfume);
+}
+
+.view-product {
+  min-height: 38px;
+}
+
+/* ---------------------------------------------------------
+   About: collage más editorial
+   --------------------------------------------------------- */
+.modern-about-visual {
+  isolation: isolate;
+  box-shadow: 0 30px 80px rgba(7, 26, 66, 0.10);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.modern-about-visual::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  z-index: 1;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.66);
+  pointer-events: none;
+}
+
+.about-logo-wrap {
+  transition:
+    transform 320ms var(--pro-ease),
+    box-shadow 320ms ease;
+}
+
+.modern-about-visual:hover .about-logo-wrap {
+  transform: scale(1.035);
+  box-shadow: 0 32px 75px rgba(7,26,66,.22);
+}
+
+.about-list > div {
+  padding: 10px 0;
+  border-radius: 16px;
+  transition:
+    transform 220ms var(--pro-ease),
+    background-color 220ms ease;
+}
+
+.about-list > div:hover {
+  transform: translateX(5px);
+  background: linear-gradient(90deg, rgba(33, 101, 216, 0.045), transparent);
+}
+
+/* ---------------------------------------------------------
+   CTA principal
+   --------------------------------------------------------- */
+.quick-access-card {
+  isolation: isolate;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 32px 80px rgba(7,26,66,.18);
+}
+
+.quick-access-card::before,
+.quick-access-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.quick-access-card::before {
+  width: 260px;
+  height: 260px;
+  right: -100px;
+  top: -130px;
+  background: rgba(245, 200, 75, 0.11);
+}
+
+.quick-access-card::after {
+  width: 190px;
+  height: 190px;
+  left: 38%;
+  bottom: -150px;
+  background: rgba(33, 101, 216, 0.22);
+  filter: blur(4px);
+}
+
+.quick-access-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------
+   Ubicación
+   --------------------------------------------------------- */
+.location-details > div {
+  padding: 10px;
+  border-radius: 15px;
+  transition:
+    transform 200ms var(--pro-ease),
+    background-color 200ms ease;
+}
+
+.location-details > div:hover {
+  transform: translateX(4px);
+  background: rgba(255,255,255,.72);
+}
+
+.map-card {
+  transition:
+    transform 320ms var(--pro-ease),
+    box-shadow 320ms ease;
+}
+
+.map-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 32px 80px rgba(7, 26, 66, 0.15);
+}
+
+.map-label {
+  border: 1px solid rgba(148,163,184,.16);
+}
+
+/* ---------------------------------------------------------
+   Catálogos: identidad diferenciada
+   --------------------------------------------------------- */
+.catalog-hero {
+  position: relative;
+}
+
+.catalog-hero::after {
+  position: absolute;
+  right: 2vw;
+  bottom: -0.12em;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  font-size: clamp(72px, 12vw, 170px);
+  opacity: 0.035;
+  white-space: nowrap;
+}
+
+.catalog-hero-ecuador::after {
+  content: "ECUADOR";
+  color: var(--navy);
+}
+
+.catalog-hero-perfume::after {
+  content: "PARFUM";
+  color: #ffffff;
+  opacity: 0.04;
+}
+
+.catalog-hero-grid > div:first-child {
+  position: relative;
+  z-index: 2;
+}
+
+.catalog-hero-pills span {
+  transition:
+    transform 180ms var(--pro-ease),
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.catalog-hero-pills span:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(7,26,66,.08);
+}
+
+.perfume-pills span:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  border-color: rgba(212,175,55,.52);
+}
+
+.catalog-photo-showcase {
+  transform:
+    perspective(1100px)
+    rotateX(var(--catalog-tilt-x, 0deg))
+    rotateY(var(--catalog-tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 320ms var(--pro-ease),
+    box-shadow 320ms ease;
+}
+
+.catalog-photo-showcase::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    430px circle at var(--catalog-glow-x, 50%) var(--catalog-glow-y, 40%),
+    rgba(255,255,255,.16),
+    transparent 45%
+  );
+}
+
+.perfume-photo-showcase::before {
+  background: radial-gradient(
+    430px circle at var(--catalog-glow-x, 50%) var(--catalog-glow-y, 40%),
+    rgba(212,175,55,.16),
+    transparent 45%
+  );
+}
+
+.catalog-content {
+  position: relative;
+}
+
+.catalog-content::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 160px;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(33,101,216,.025), transparent);
+  pointer-events: none;
+}
+
+.perfume-content::before {
+  background: linear-gradient(180deg, rgba(122,39,79,.04), transparent);
+}
+
+.catalog-tools-head h2 {
+  letter-spacing: -0.035em;
+}
+
+.search-box,
+.catalog-sort-select {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms var(--pro-ease);
+}
+
+.search-box:hover,
+.catalog-sort-select:hover {
+  transform: translateY(-1px);
+  border-color: #94a3b8;
+}
+
+.filter-btn {
+  min-height: 38px;
+}
+
+.filter-btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.stock-check-toggle {
+  min-height: 38px;
+  padding: 5px 9px;
+  border-radius: 10px;
+  transition: background-color 180ms ease;
+}
+
+.stock-check-toggle:hover {
+  background: rgba(148,163,184,.10);
+}
+
+.catalog-crosslink {
+  position: relative;
+}
+
+.crosslink-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(7, 26, 66, 0.14);
+}
+
+.crosslink-card::after {
+  content: "";
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -85px;
+  top: -105px;
+  z-index: -1;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 0 0 24px rgba(255,255,255,.025),
+    0 0 0 48px rgba(255,255,255,.015);
+}
+
+/* ---------------------------------------------------------
+   Modal
+   --------------------------------------------------------- */
+.modal.open .product-modal-card {
+  box-shadow: 0 40px 110px rgba(0,0,0,.38);
+}
+
+.modal-close {
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.modal-close:hover {
+  transform: rotate(6deg) scale(1.06);
+  background: #f8fafc;
+}
+
+/* ---------------------------------------------------------
+   WhatsApp & scroll-to-top
+   --------------------------------------------------------- */
+.wa-floating-btn {
+  isolation: isolate;
+}
+
+.wa-floating-btn::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid rgba(16,185,129,.26);
+  opacity: 0;
+  transform: scale(.96);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.wa-floating-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scroll-top-btn {
+  position: fixed;
+  right: 24px;
+  bottom: 88px;
+  z-index: 89;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(148,163,184,.22);
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  color: var(--navy);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  box-shadow: 0 12px 30px rgba(7,26,66,.14);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease,
+    transform 180ms var(--pro-ease),
+    box-shadow 180ms ease;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(7,26,66,.18);
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,200,75,.7), rgba(33,101,216,.7), transparent);
+}
+
+.site-footer::after {
+  content: "REMESAS USA";
+  position: absolute;
+  right: -12px;
+  bottom: -0.22em;
+  font-size: clamp(64px, 10vw, 130px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  color: rgba(255,255,255,.018);
+  pointer-events: none;
+  user-select: none;
+}
+
+.footer-grid,
+.footer-bottom {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------
+   Reveal refinado
+   --------------------------------------------------------- */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px) scale(0.995);
+  transition:
+    opacity 620ms var(--pro-ease) var(--reveal-delay, 0ms),
+    transform 620ms var(--pro-ease) var(--reveal-delay, 0ms);
+}
+
+.reveal-on-scroll.reveal-left {
+  transform: translateX(-26px);
+}
+
+.reveal-on-scroll.reveal-right {
+  transform: translateX(26px);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+@media (max-width: 1050px) {
+  .landing-hero {
+    min-height: auto;
+  }
+
+  .landing-hero::before,
+  .catalog-hero::after {
+    opacity: 0.025;
+  }
+
+  .hero-showcase {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.scrolled .site-header {
+    height: 74px;
+  }
+
+  .nav-links {
+    transform-origin: top right;
+  }
+
+  .nav-links.open {
+    animation: proMenuIn 220ms var(--pro-ease) both;
+  }
+
+  @keyframes proMenuIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .landing-copy::before {
+    display: none;
+  }
+
+  .landing-hero::before {
+    right: -26vw;
+    bottom: 0;
+  }
+
+  .choice-card:hover,
+  .product-card:hover,
+  .map-card:hover {
+    transform: none;
+  }
+
+  .scroll-top-btn {
+    right: 18px;
+    bottom: 82px;
+  }
+}
+
+@media (max-width: 520px) {
+  .scroll-top-btn {
+    width: 42px;
+    height: 42px;
+    right: 17px;
+    bottom: 78px;
+  }
+
+  .landing-trust-row span {
+    width: 100%;
+    text-align: left;
+  }
+
+  .catalog-hero::after,
+  .site-footer::after {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   Reduced motion: accesible y rápido
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-showcase,
+  .catalog-photo-showcase,
+  .choice-card,
+  .product-card,
+  .showcase-badge,
+  .map-card,
+  .about-logo-wrap,
+  .btn,
+  .scroll-top-btn {
+    transform: none !important;
+  }
+
+  .product-visual::after,
+  .nav-cta-btn::before {
+    display: none;
+  }
+}
+
+
+/* =========================================================
+   V10 · HERO ECUADOR, FOOTER CORREGIDO & VIEW TRANSITIONS
+   ========================================================= */
+
+/* La portada de productos usa la misma proporción visual de Perfumería. */
+.ecuador-cover-showcase {
+  grid-template-columns: 1fr;
+  min-height: 390px;
+  padding: 12px;
+}
+
+.ecuador-cover-main {
+  width: 100%;
+  min-height: 364px;
+  background: #f8fafc;
+}
+
+.ecuador-cover-main img {
+  width: 100%;
+  height: 100%;
+  min-height: 364px;
+  object-fit: cover;
+  object-position: center;
+  padding: 0;
+  filter: none;
+}
+
+.ecuador-cover-showcase:hover .ecuador-cover-main img {
+  transform: scale(1.025);
+}
+
+/* El logo del footer conserva su proporción cuadrada real. */
+.footer-brand img {
+  width: 96px !important;
+  height: 96px !important;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  display: block;
+  padding: 7px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+}
+
+/* Evita que el header tape una sección al navegar con anclas. */
+section[id],
+[id].section {
+  scroll-margin-top: 112px;
+}
+
+/* ---------------------------------------------------------
+   Transiciones nativas entre páginas
+   Sin librerías: el navegador compone transform + opacity.
+   --------------------------------------------------------- */
+@view-transition {
+  navigation: auto;
+}
+
+.site-header {
+  view-transition-name: remesas-header;
+}
+
+main {
+  view-transition-name: remesas-page;
+}
+
+.site-footer {
+  view-transition-name: remesas-footer;
+}
+
+::view-transition-old(remesas-header),
+::view-transition-new(remesas-header),
+::view-transition-old(remesas-footer),
+::view-transition-new(remesas-footer) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(.2, .8, .2, 1);
+}
+
+::view-transition-old(remesas-page) {
+  animation: remesas-page-out 160ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+::view-transition-new(remesas-page) {
+  animation: remesas-page-in 320ms cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes remesas-page-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(.995);
+  }
+}
+
+@keyframes remesas-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Microtransición de entrada de secciones: solo compositor. */
+.reveal-on-scroll {
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+  will-change: auto;
+}
+
+@media (max-width: 760px) {
+  .ecuador-cover-showcase {
+    min-height: 300px;
+  }
+
+  .ecuador-cover-main,
+  .ecuador-cover-main img {
+    min-height: 290px;
+  }
+
+  .footer-brand img {
+    width: 82px !important;
+    height: 82px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(remesas-header),
+  ::view-transition-new(remesas-header),
+  ::view-transition-old(remesas-page),
+  ::view-transition-new(remesas-page),
+  ::view-transition-old(remesas-footer),
+  ::view-transition-new(remesas-footer) {
+    animation: none !important;
+  }
+
+  .reveal-on-scroll {
+    will-change: auto;
+  }
+}
