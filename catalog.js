@@ -1,13 +1,17 @@
 (async function () {
-  const api = window.RemesasAPI;
+  const api =
+    window.RemesasAPI;
 
   const section =
-    document.body.dataset.catalogLine === "perfumes"
+    document.body.dataset
+      .catalogLine ===
+    "perfumes"
       ? "perfume"
       : "ecuador";
 
   const isPerfume =
-    section === "perfume";
+    section ===
+    "perfume";
 
   const ECUADOR_PROMO_IMAGE =
     "assets/hero-ecuador-bandera.png";
@@ -15,30 +19,55 @@
   const PERFUME_PROMO_IMAGE =
     "assets/perfumesfoto.jpg";
 
+  // =====================================================
+  // PAGINACIÓN
+  // =====================================================
+
+  const PAGE_SIZE = 24;
+
+  /*
+   * Pedimos 25 al servidor.
+   *
+   * Mostramos solamente 24.
+   * El artículo número 25 sirve para
+   * saber si todavía existen más.
+   */
+  const FETCH_SIZE =
+    PAGE_SIZE + 1;
+
   let products = [];
   let categories = [];
-  let activeCategory = "all";
-  let searchTerm = "";
-  let sortMode = "featured";
-  let onlyAvailable = false;
-  let lastTrackedSearch = "";
-  let lastFocusedElement = null;
 
-  const esc = (value) =>
-    String(value ?? "").replace(
-      /[&<>'"]/g,
-      (character) =>
-        ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          "'": "&#39;",
-          '"': "&quot;",
-        })[character]
-    );
+  let activeCategory =
+    "all";
 
-  const money = (value) =>
-    `$${Number(value || 0).toFixed(2)}`;
+  let searchTerm =
+    "";
+
+  let sortMode =
+    "featured";
+
+  let onlyAvailable =
+    false;
+
+  let hasMore =
+    true;
+
+  let loadingMore =
+    false;
+
+  let requestVersion =
+    0;
+
+  let lastTrackedSearch =
+    "";
+
+  let lastFocusedElement =
+    null;
+
+  // =====================================================
+  // ELEMENTOS
+  // =====================================================
 
   const grid =
     document.getElementById(
@@ -90,28 +119,107 @@
       "modalShare"
     );
 
-  function categoryName(id) {
+  // =====================================================
+  // BOTÓN CARGAR MÁS
+  // =====================================================
+
+  const loadMoreContainer =
+    document.createElement(
+      "div"
+    );
+
+  loadMoreContainer.className =
+    "catalog-load-more";
+
+  loadMoreContainer.style.cssText = `
+    width: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 38px 16px 10px;
+  `;
+
+  const loadMoreButton =
+    document.createElement(
+      "button"
+    );
+
+  loadMoreButton.type =
+    "button";
+
+  loadMoreButton.className =
+    "btn btn-red";
+
+  loadMoreButton.style.cssText = `
+    min-width: 210px;
+    justify-content: center;
+  `;
+
+  loadMoreContainer.appendChild(
+    loadMoreButton
+  );
+
+  grid.insertAdjacentElement(
+    "afterend",
+    loadMoreContainer
+  );
+
+  // =====================================================
+  // UTILIDADES
+  // =====================================================
+
+  const esc = value =>
+    String(
+      value ?? ""
+    ).replace(
+      /[&<>'"]/g,
+      character =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;",
+        })[character]
+    );
+
+  const money = value =>
+    `$${Number(
+      value || 0
+    ).toFixed(2)}`;
+
+  function categoryName(
+    id
+  ) {
     return (
       categories.find(
-        (category) =>
+        category =>
           category.id === id
       )?.name ||
       "General"
     );
   }
 
-  function stockLabel(status) {
-    return status === "available"
+  function stockLabel(
+    status
+  ) {
+    return status ===
+      "available"
       ? "Disponible"
-      : status === "low_stock"
+      : status ===
+          "low_stock"
       ? "Pocas unidades"
       : "Agotado";
   }
 
-  function stockClass(status) {
-    return status === "available"
+  function stockClass(
+    status
+  ) {
+    return status ===
+      "available"
       ? "available"
-      : status === "low_stock"
+      : status ===
+          "low_stock"
       ? "low"
       : "unavailable";
   }
@@ -129,7 +237,9 @@
     `;
   }
 
-  function imageMarkup(item) {
+  function imageMarkup(
+    item
+  ) {
     const fallback =
       isPerfume
         ? "✨"
@@ -163,54 +273,61 @@
       .querySelectorAll(
         "img[data-fallback]"
       )
-      .forEach((image) => {
-        if (
+      .forEach(
+        image => {
+          if (
+            image.dataset
+              .fallbackBound ===
+            "true"
+          ) {
+            return;
+          }
+
           image.dataset
-            .fallbackBound ===
-          "true"
-        ) {
-          return;
-        }
+            .fallbackBound =
+            "true";
 
-        image.dataset
-          .fallbackBound =
-          "true";
+          image.addEventListener(
+            "error",
+            () => {
+              const emoji =
+                image.dataset
+                  .fallback ||
+                (
+                  isPerfume
+                    ? "✨"
+                    : "🇪🇨"
+                );
 
-        image.addEventListener(
-          "error",
-          () => {
-            const emoji =
-              image.dataset
-                .fallback ||
-              (isPerfume
-                ? "✨"
-                : "🇪🇨");
+              const fallback =
+                document
+                  .createElement(
+                    "span"
+                  );
 
-            const fallback =
-              document.createElement(
-                "span"
+              fallback.className =
+                "fallback-emoji";
+
+              fallback.setAttribute(
+                "aria-hidden",
+                "true"
               );
 
-            fallback.className =
-              "fallback-emoji";
+              fallback.textContent =
+                emoji;
 
-            fallback.setAttribute(
-              "aria-hidden",
-              "true"
-            );
-
-            fallback.textContent =
-              emoji;
-
-            image.replaceWith(
-              fallback
-            );
-          }
-        );
-      });
+              image.replaceWith(
+                fallback
+              );
+            }
+          );
+        }
+      );
   }
 
-  function productUrl(item) {
+  function productUrl(
+    item
+  ) {
     const url =
       new URL(
         window.location.href
@@ -226,9 +343,10 @@
     return url.toString();
   }
 
-  /* =========================================================
-     HERO DE CATÁLOGO
-     ========================================================= */
+  // =====================================================
+  // HERO
+  // =====================================================
+
   function hydrateCatalogHero() {
     const targets = [
       ...document.querySelectorAll(
@@ -245,7 +363,7 @@
     const candidates =
       products
         .filter(
-          (item) =>
+          item =>
             item.image_url &&
             item.stock_status !==
               "out_of_stock"
@@ -261,7 +379,10 @@
         );
 
     targets.forEach(
-      (image, index) => {
+      (
+        image,
+        index
+      ) => {
         const holder =
           image.closest(
             "figure, .catalog-photo-main"
@@ -284,7 +405,9 @@
                 "has-image"
               );
             },
-            { once: true }
+            {
+              once: true,
+            }
           );
 
           image.addEventListener(
@@ -298,7 +421,9 @@
                 "has-image"
               );
             },
-            { once: true }
+            {
+              once: true,
+            }
           );
 
           return;
@@ -321,7 +446,9 @@
                 "has-image"
               );
             },
-            { once: true }
+            {
+              once: true,
+            }
           );
 
           image.addEventListener(
@@ -335,7 +462,9 @@
                 "has-image"
               );
             },
-            { once: true }
+            {
+              once: true,
+            }
           );
 
           return;
@@ -378,7 +507,9 @@
               "has-image"
             );
           },
-          { once: true }
+          {
+            once: true,
+          }
         );
 
         image.addEventListener(
@@ -392,19 +523,30 @@
               "has-image"
             );
           },
-          { once: true }
+          {
+            once: true,
+          }
         );
       }
     );
   }
 
-  /* =========================================================
-     SKELETONS
-     ========================================================= */
+  // =====================================================
+  // SKELETONS
+  // =====================================================
+
   function renderSkeletons() {
+    empty.hidden =
+      true;
+
+    grid.hidden =
+      false;
+
     grid.innerHTML =
       Array.from(
-        { length: 8 },
+        {
+          length: 8,
+        },
         () => `
           <article
             class="product-card skeleton-card"
@@ -438,9 +580,10 @@
       ).join("");
   }
 
-  /* =========================================================
-     FILTROS
-     ========================================================= */
+  // =====================================================
+  // FILTROS
+  // =====================================================
+
   function renderFilters() {
     const rows = [
       {
@@ -453,7 +596,7 @@
     filters.innerHTML =
       rows
         .map(
-          (category) => `
+          category => `
             <button
               class="filter-btn ${
                 category.id ===
@@ -478,138 +621,181 @@
       .querySelectorAll(
         "button"
       )
-      .forEach((button) => {
-        button.addEventListener(
-          "click",
-          () => {
-            activeCategory =
-              button.dataset.cat;
+      .forEach(
+        button => {
+          button.addEventListener(
+            "click",
+            async () => {
+              const category =
+                button.dataset.cat;
 
-            renderFilters();
-            renderProducts();
-          }
-        );
-      });
+              if (
+                category ===
+                activeCategory
+              ) {
+                return;
+              }
+
+              activeCategory =
+                category;
+
+              renderFilters();
+
+              await loadCatalog({
+                reset: true,
+              });
+            }
+          );
+        }
+      );
   }
 
-  function filteredProducts() {
-    const query =
+  // =====================================================
+  // PARÁMETROS PARA FASTAPI
+  // =====================================================
+
+  function catalogParams(
+    offset
+  ) {
+    const cleanSearch =
       searchTerm
         .trim()
-        .toLowerCase();
-
-    return products
-      .filter((item) => {
-        const categoryOk =
-          activeCategory ===
-            "all" ||
-          item.category_id ===
-            activeCategory;
-
-        const stockOk =
-          !onlyAvailable ||
-          item.stock_status !==
-            "out_of_stock";
-
-        const text =
-          `
-            ${item.name}
-            ${item.brand || ""}
-            ${item.description || ""}
-            ${categoryName(
-              item.category_id
-            )}
-          `.toLowerCase();
-
-        return (
-          categoryOk &&
-          stockOk &&
-          (!query ||
-            text.includes(
-              query
-            ))
+        .slice(
+          0,
+          100
         );
-      })
-      .sort((a, b) => {
-        if (
-          sortMode ===
-          "price-asc"
-        ) {
-          return (
-            Number(
-              a.price ||
-                0
-            ) -
-            Number(
-              b.price ||
-                0
-            )
-          );
-        }
 
-        if (
-          sortMode ===
-          "price-desc"
-        ) {
-          return (
-            Number(
-              b.price ||
-                0
-            ) -
-            Number(
-              a.price ||
-                0
-            )
-          );
-        }
+    return {
+      offset,
+      limit:
+        FETCH_SIZE,
 
-        if (
-          sortMode ===
-          "name-asc"
-        ) {
-          return a.name.localeCompare(
-            b.name
-          );
-        }
+      search:
+        cleanSearch ||
+        undefined,
 
-        return (
-          Number(
-            b.featured
-          ) -
-            Number(
-              a.featured
-            ) ||
-          a.name.localeCompare(
-            b.name
-          )
-        );
-      });
+      category_id:
+        activeCategory !==
+        "all"
+          ? activeCategory
+          : undefined,
+
+      only_available:
+        onlyAvailable
+          ? true
+          : undefined,
+
+      sort:
+        sortMode,
+    };
   }
 
-  /* =========================================================
-     PRODUCTOS
-     ========================================================= */
-  function renderProducts() {
-    const rows =
-      filteredProducts();
+  // =====================================================
+  // CONTADOR
+  // =====================================================
+
+  function updateCount() {
+    const amount =
+      products.length;
 
     const noun =
       isPerfume
-        ? rows.length === 1
-          ? "perfume"
-          : "perfumes"
-        : rows.length === 1
-        ? "producto"
-        : "productos";
+        ? (
+            amount === 1
+              ? "perfume"
+              : "perfumes"
+          )
+        : (
+            amount === 1
+              ? "producto"
+              : "productos"
+          );
 
-    count.textContent =
-      `${rows.length} ${noun}`;
+    if (
+      amount === 0
+    ) {
+      count.textContent =
+        `0 ${noun}`;
+
+      return;
+    }
+
+    if (hasMore) {
+      count.textContent =
+        `Mostrando ${amount} ${noun}`;
+    } else {
+      count.textContent =
+        `${amount} ${noun}`;
+    }
+  }
+
+  // =====================================================
+  // BOTÓN CARGAR MÁS
+  // =====================================================
+
+  function updateLoadMore() {
+    const visible =
+      products.length > 0 &&
+      hasMore;
+
+    loadMoreContainer.style
+      .display =
+      visible
+        ? "flex"
+        : "none";
+
+    loadMoreButton.disabled =
+      loadingMore;
+
+    loadMoreButton.innerHTML =
+      loadingMore
+        ? `
+          <span>
+            Cargando...
+          </span>
+        `
+        : `
+          <span>
+            Cargar 24 más
+          </span>
+
+          <span
+            aria-hidden="true"
+            style="
+              margin-left: 8px;
+              font-size: 17px;
+            "
+          >
+            ↓
+          </span>
+        `;
+  }
+
+  // =====================================================
+  // RENDER PRODUCTOS
+  // =====================================================
+
+  function renderProducts() {
+    const rows =
+      products;
+
+    updateCount();
 
     empty.hidden =
       rows.length > 0;
 
     grid.hidden =
       rows.length === 0;
+
+    if (
+      rows.length === 0
+    ) {
+      grid.innerHTML = "";
+
+      updateLoadMore();
+
+      return;
+    }
 
     grid.innerHTML =
       rows
@@ -708,7 +894,7 @@
                 <p>
                   ${esc(
                     item.description ||
-                      "Disponible en Remesas USA · 1567 Watson Ave, Bronx."
+                    "Disponible en Remesas USA · 1567 Watson Ave, Bronx."
                   )}
                 </p>
 
@@ -744,7 +930,10 @@
                         ? "fragancia"
                         : "detalle"
                     }
-                    <b>→</b>
+
+                    <b>
+                      →
+                    </b>
                   </button>
                 </div>
               </div>
@@ -761,94 +950,314 @@
       .querySelectorAll(
         "[data-card-id]"
       )
-      .forEach((card) => {
-        const open = () =>
-          openProduct(
-            card.dataset.cardId
-          );
+      .forEach(
+        card => {
+          const open =
+            () =>
+              openProduct(
+                card.dataset.cardId
+              );
 
-        card.addEventListener(
-          "click",
-          (event) => {
-            if (
-              event.target.closest(
-                "button, a"
-              )
-            ) {
+          card.addEventListener(
+            "click",
+            event => {
               if (
                 event.target.closest(
-                  "[data-view]"
+                  "button, a"
                 )
               ) {
-                open();
+                if (
+                  event.target.closest(
+                    "[data-view]"
+                  )
+                ) {
+                  open();
+                }
+
+                return;
               }
-
-              return;
-            }
-
-            open();
-          }
-        );
-
-        card.addEventListener(
-          "keydown",
-          (event) => {
-            if (
-              event.target.closest(
-                "button, a, input, select"
-              )
-            ) {
-              return;
-            }
-
-            if (
-              event.key ===
-                "Enter" ||
-              event.key ===
-                " "
-            ) {
-              event.preventDefault();
 
               open();
             }
-          }
-        );
-      });
+          );
+
+          card.addEventListener(
+            "keydown",
+            event => {
+              if (
+                event.target.closest(
+                  "button, a, input, select"
+                )
+              ) {
+                return;
+              }
+
+              if (
+                event.key ===
+                  "Enter" ||
+                event.key ===
+                  " "
+              ) {
+                event.preventDefault();
+
+                open();
+              }
+            }
+          );
+        }
+      );
 
     grid
       .querySelectorAll(
         "[data-view]"
       )
-      .forEach((button) => {
-        button.addEventListener(
-          "click",
-          (event) => {
-            event.stopPropagation();
+      .forEach(
+        button => {
+          button.addEventListener(
+            "click",
+            event => {
+              event.stopPropagation();
 
-            openProduct(
-              button.dataset.view
-            );
-          }
-        );
-      });
+              openProduct(
+                button.dataset.view
+              );
+            }
+          );
+        }
+      );
+
+    updateLoadMore();
 
     window.RemesasUI
       ?.refreshReveal?.();
   }
 
-  /* =========================================================
-     MODAL
-     ========================================================= */
-  function openProduct(id) {
+  // =====================================================
+  // CARGA DESDE SERVIDOR
+  // =====================================================
+
+  async function loadCatalog({
+    reset = false,
+  } = {}) {
+
+    if (
+      !reset &&
+      (
+        loadingMore ||
+        !hasMore
+      )
+    ) {
+      return;
+    }
+
+    /*
+     * Cada reinicio aumenta la versión.
+     * Si una búsqueda anterior responde tarde,
+     * su resultado se ignora.
+     */
+    const version =
+      reset
+        ? ++requestVersion
+        : requestVersion;
+
+    const offset =
+      reset
+        ? 0
+        : products.length;
+
+    if (reset) {
+      products = [];
+
+      hasMore = true;
+
+      loadMoreContainer.style
+        .display =
+        "none";
+
+      renderSkeletons();
+
+    } else {
+      loadingMore = true;
+
+      updateLoadMore();
+    }
+
+    try {
+      const rows =
+        await api.listCatalog(
+          section,
+          catalogParams(
+            offset
+          )
+        );
+
+      if (
+        version !==
+        requestVersion
+      ) {
+        return;
+      }
+
+      hasMore =
+        rows.length >
+        PAGE_SIZE;
+
+      const page =
+        rows.slice(
+          0,
+          PAGE_SIZE
+        );
+
+      if (reset) {
+        products =
+          page;
+      } else {
+        const existingIds =
+          new Set(
+            products.map(
+              item =>
+                String(
+                  item.id
+                )
+            )
+          );
+
+        const uniquePage =
+          page.filter(
+            item =>
+              !existingIds.has(
+                String(
+                  item.id
+                )
+              )
+          );
+
+        products.push(
+          ...uniquePage
+        );
+      }
+
+      renderProducts();
+
+      if (reset) {
+        hydrateCatalogHero();
+      }
+
+    } catch (error) {
+      if (
+        version !==
+        requestVersion
+      ) {
+        return;
+      }
+
+      if (reset) {
+        products = [];
+
+        hasMore = false;
+
+        empty.hidden =
+          true;
+
+        grid.hidden =
+          false;
+
+        grid.innerHTML = `
+          <div
+            class="empty-state backend-error"
+          >
+            <div>
+              ⚠
+            </div>
+
+            <h3>
+              No pudimos cargar el catálogo
+            </h3>
+
+            <p>
+              ${esc(
+                error.message
+              )}
+            </p>
+
+            <button
+              class="btn btn-red"
+              id="catalogRetryButton"
+              type="button"
+            >
+              Reintentar
+            </button>
+          </div>
+        `;
+
+        loadMoreContainer.style
+          .display =
+          "none";
+
+        document
+          .getElementById(
+            "catalogRetryButton"
+          )
+          ?.addEventListener(
+            "click",
+            () => {
+              loadCatalog({
+                reset: true,
+              });
+            }
+          );
+
+      } else {
+        console.error(
+          "Error cargando más artículos:",
+          error
+        );
+      }
+
+    } finally {
+      if (
+        !reset
+      ) {
+        loadingMore = false;
+
+        if (
+          version ===
+          requestVersion
+        ) {
+          updateLoadMore();
+        }
+      }
+    }
+  }
+
+  // =====================================================
+  // MODAL
+  // =====================================================
+
+  function openProduct(
+    id
+  ) {
     const item =
       products.find(
-        (value) =>
+        value =>
           String(
             value.id
           ) ===
           String(id)
       );
 
+    if (!item) {
+      return;
+    }
+
+    showProduct(
+      item
+    );
+  }
+
+  function showProduct(
+    item
+  ) {
     if (!item) {
       return;
     }
@@ -969,9 +1378,11 @@
       `¿Está disponible en el local de Watson Ave?`;
 
     whatsapp.href =
-      `https://wa.me/19292659222?text=${encodeURIComponent(
-        msg
-      )}`;
+      `https://wa.me/19292659222?text=${
+        encodeURIComponent(
+          msg
+        )
+      }`;
 
     whatsapp.onclick =
       () =>
@@ -991,24 +1402,23 @@
     if (shareBtn) {
       shareBtn.onclick =
         async () => {
-          const shareData =
-            {
-              title:
-                `${item.name} | Remesas USA`,
+          const shareData = {
+            title:
+              `${item.name} | Remesas USA`,
 
-              text:
-                `Mira este ${kind} ` +
-                `en Remesas USA: ` +
-                `${item.name} ` +
-                `(${money(
-                  item.price
-                )})`,
+            text:
+              `Mira este ${kind} ` +
+              `en Remesas USA: ` +
+              `${item.name} ` +
+              `(${money(
+                item.price
+              )})`,
 
-              url:
-                productUrl(
-                  item
-                ),
-            };
+            url:
+              productUrl(
+                item
+              ),
+          };
 
           if (
             navigator.share
@@ -1020,19 +1430,24 @@
             } catch {
               // El usuario pudo cancelar.
             }
+
           } else {
             const shareText =
               `${shareData.text} - ${shareData.url}`;
 
             try {
-              await navigator.clipboard.writeText(
-                shareText
-              );
+              await navigator
+                .clipboard
+                .writeText(
+                  shareText
+                );
+
             } catch {
               const helper =
-                document.createElement(
-                  "textarea"
-                );
+                document
+                  .createElement(
+                    "textarea"
+                  );
 
               helper.value =
                 shareText;
@@ -1048,9 +1463,10 @@
               helper.style.opacity =
                 "0";
 
-              document.body.appendChild(
-                helper
-              );
+              document.body
+                .appendChild(
+                  helper
+                );
 
               helper.select();
 
@@ -1087,7 +1503,8 @@
       "false"
     );
 
-    document.body.style.overflow =
+    document.body.style
+      .overflow =
       "hidden";
 
     requestAnimationFrame(
@@ -1119,14 +1536,17 @@
       "true"
     );
 
-    document.body.style.overflow =
+    document.body.style
+      .overflow =
       "";
 
     if (
-      lastFocusedElement instanceof
+      lastFocusedElement
+      instanceof
       HTMLElement
     ) {
-      lastFocusedElement.focus();
+      lastFocusedElement
+        .focus();
     }
   }
 
@@ -1134,16 +1554,18 @@
     .querySelectorAll(
       "[data-close-modal]"
     )
-    .forEach((element) => {
-      element.addEventListener(
-        "click",
-        closeModal
-      );
-    });
+    .forEach(
+      element => {
+        element.addEventListener(
+          "click",
+          closeModal
+        );
+      }
+    );
 
   modal.addEventListener(
     "keydown",
-    (event) => {
+    event => {
       if (
         event.key ===
         "Escape"
@@ -1161,14 +1583,16 @@
       }
 
       const focusable = [
-        ...modal.querySelectorAll(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        ),
+        ...modal
+          .querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          ),
       ].filter(
-        (element) =>
-          !element.hasAttribute(
-            "hidden"
-          )
+        element =>
+          !element
+            .hasAttribute(
+              "hidden"
+            )
       );
 
       if (
@@ -1183,7 +1607,7 @@
       const last =
         focusable[
           focusable.length -
-            1
+          1
         ];
 
       if (
@@ -1194,6 +1618,7 @@
         event.preventDefault();
 
         last.focus();
+
       } else if (
         !event.shiftKey &&
         document.activeElement ===
@@ -1206,32 +1631,51 @@
     }
   );
 
-  /* =========================================================
-     BUSCADOR
-     ========================================================= */
+  // =====================================================
+  // CARGAR MÁS
+  // =====================================================
+
+  loadMoreButton.addEventListener(
+    "click",
+    async () => {
+      await loadCatalog({
+        reset: false,
+      });
+    }
+  );
+
+  // =====================================================
+  // BÚSQUEDA
+  // =====================================================
+
   search.addEventListener(
     "input",
     () => {
       searchTerm =
         search.value;
 
-      renderProducts();
-
-      const term =
-        searchTerm.trim();
-
       clearTimeout(
         search._timer
       );
 
-      if (
-        term.length >= 3 &&
-        term.toLowerCase() !==
-          lastTrackedSearch.toLowerCase()
-      ) {
-        search._timer =
-          setTimeout(
-            () => {
+      search._timer =
+        setTimeout(
+          async () => {
+            await loadCatalog({
+              reset: true,
+            });
+
+            const term =
+              searchTerm
+                .trim();
+
+            if (
+              term.length >= 3 &&
+              term
+                .toLowerCase() !==
+              lastTrackedSearch
+                .toLowerCase()
+            ) {
               lastTrackedSearch =
                 term;
 
@@ -1247,56 +1691,63 @@
                 page_path:
                   location.pathname,
               });
-            },
-            700
-          );
-      }
+            }
+          },
+          500
+        );
     }
   );
 
-  /* =========================================================
-     ORDEN
-     ========================================================= */
+  // =====================================================
+  // ORDENAMIENTO
+  // =====================================================
+
   if (sortSelect) {
     sortSelect.addEventListener(
       "change",
-      () => {
+      async () => {
         sortMode =
           sortSelect.value;
 
-        renderProducts();
+        await loadCatalog({
+          reset: true,
+        });
       }
     );
   }
 
-  /* =========================================================
-     SOLO DISPONIBLES
-     ========================================================= */
+  // =====================================================
+  // SOLO DISPONIBLES
+  // =====================================================
+
   if (
     onlyAvailableToggle
   ) {
-    onlyAvailableToggle.addEventListener(
-      "change",
-      () => {
-        onlyAvailable =
-          onlyAvailableToggle.checked;
+    onlyAvailableToggle
+      .addEventListener(
+        "change",
+        async () => {
+          onlyAvailable =
+            onlyAvailableToggle
+              .checked;
 
-        renderProducts();
-      }
-    );
+          await loadCatalog({
+            reset: true,
+          });
+        }
+      );
   }
 
-  /* =========================================================
-     LIMPIAR FILTROS
-     ========================================================= */
+  // =====================================================
+  // LIMPIAR FILTROS
+  // =====================================================
+
   clear.addEventListener(
     "click",
-    () => {
-      search.value =
-        "";
+    async () => {
+      search.value = "";
 
-      searchTerm =
-        "";
+      searchTerm = "";
 
       activeCategory =
         "all";
@@ -1307,6 +1758,9 @@
       onlyAvailable =
         false;
 
+      lastTrackedSearch =
+        "";
+
       if (sortSelect) {
         sortSelect.value =
           "featured";
@@ -1315,18 +1769,23 @@
       if (
         onlyAvailableToggle
       ) {
-        onlyAvailableToggle.checked =
+        onlyAvailableToggle
+          .checked =
           false;
       }
 
       renderFilters();
-      renderProducts();
+
+      await loadCatalog({
+        reset: true,
+      });
     }
   );
 
-  /* =========================================================
-     MENÚ MÓVIL
-     ========================================================= */
+  // =====================================================
+  // MENÚ MÓVIL
+  // =====================================================
+
   const toggle =
     document.querySelector(
       ".mobile-toggle"
@@ -1351,36 +1810,42 @@
         toggle.setAttribute(
           "aria-expanded",
           String(
-            nav.classList.contains(
-              "open"
-            )
+            nav.classList
+              .contains(
+                "open"
+              )
           )
         );
       }
     );
 
     nav
-      .querySelectorAll("a")
-      .forEach((link) => {
-        link.addEventListener(
-          "click",
-          () => {
-            nav.classList.remove(
-              "open"
-            );
+      .querySelectorAll(
+        "a"
+      )
+      .forEach(
+        link => {
+          link.addEventListener(
+            "click",
+            () => {
+              nav.classList.remove(
+                "open"
+              );
 
-            toggle.setAttribute(
-              "aria-expanded",
-              "false"
-            );
-          }
-        );
-      });
+              toggle.setAttribute(
+                "aria-expanded",
+                "false"
+              );
+            }
+          );
+        }
+      );
   }
 
-  /* =========================================================
-     AÑO
-     ========================================================= */
+  // =====================================================
+  // AÑO
+  // =====================================================
+
   const year =
     document.getElementById(
       "year"
@@ -1388,31 +1853,27 @@
 
   if (year) {
     year.textContent =
-      new Date().getFullYear();
+      new Date()
+        .getFullYear();
   }
 
-  /* =========================================================
-     CARGA INICIAL
-     ========================================================= */
+  // =====================================================
+  // CARGA INICIAL
+  // =====================================================
+
   try {
     renderSkeletons();
 
-    [
-      products,
-      categories,
-    ] = await Promise.all([
-      api.listCatalog(
+    categories =
+      await api.listCategories(
         section
-      ),
-
-      api.listCategories(
-        section
-      ),
-    ]);
+      );
 
     renderFilters();
-    renderProducts();
-    hydrateCatalogHero();
+
+    await loadCatalog({
+      reset: true,
+    });
 
     api.track({
       event_type:
@@ -1424,28 +1885,69 @@
         location.pathname,
     });
 
+    // ---------------------------------------------------
+    // DEEP LINK:
+    // productos.html?p=UUID
+    //
+    // Si el artículo no está entre los
+    // primeros 24, lo obtenemos directamente.
+    // ---------------------------------------------------
+
     const deepLinkedId =
       new URLSearchParams(
         window.location.search
-      ).get("p");
-
-    if (
-      deepLinkedId &&
-      products.some(
-        (item) =>
-          String(
-            item.id
-          ) ===
-          String(
-            deepLinkedId
-          )
-      )
-    ) {
-      openProduct(
-        deepLinkedId
+      ).get(
+        "p"
       );
+
+    if (deepLinkedId) {
+      const loadedItem =
+        products.find(
+          item =>
+            String(
+              item.id
+            ) ===
+            String(
+              deepLinkedId
+            )
+        );
+
+      if (loadedItem) {
+        showProduct(
+          loadedItem
+        );
+
+      } else {
+        try {
+          const item =
+            await api
+              .getCatalogItem(
+                section,
+                deepLinkedId
+              );
+
+          showProduct(
+            item
+          );
+
+        } catch {
+          /*
+           * Si no existe, está archivado
+           * o el UUID es inválido,
+           * simplemente dejamos abierto
+           * el catálogo normalmente.
+           */
+        }
+      }
     }
+
   } catch (error) {
+    empty.hidden =
+      true;
+
+    grid.hidden =
+      false;
+
     grid.innerHTML = `
       <div
         class="empty-state backend-error"
@@ -1467,10 +1969,15 @@
         <button
           class="btn btn-red"
           onclick="location.reload()"
+          type="button"
         >
           Reintentar
         </button>
       </div>
     `;
+
+    loadMoreContainer.style
+      .display =
+      "none";
   }
 })();
