@@ -2796,3 +2796,39 @@ select:focus-visible,
     font-size: 11.5px;
   }
 }
+
+.nav-links .admin-nav-access {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 14px;
+
+  border-radius: 12px;
+
+  background: #fff7cc;
+  color: #7c5c00;
+
+  border: 1px solid rgba(245, 200, 75, 0.65);
+
+  font-size: 13px;
+  font-weight: 800;
+
+  white-space: nowrap;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.nav-links .admin-nav-access:hover {
+  background: #ffd21e;
+  color: #071a42;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px
+    rgba(245, 200, 75, 0.24);
+}
