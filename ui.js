@@ -902,7 +902,7 @@
       "wa-floating-btn";
 
     waFloat.href =
-      "https://wa.me/19292659222?text=" +
+      "https://wa.me/15188981355?text=" +
       encodeURIComponent(
         "Hola Remesas USA, vengo de su página web y quisiera hacer una consulta."
       );

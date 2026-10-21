@@ -53,7 +53,7 @@
 
     const ranking = [...analytics.top_products, ...analytics.top_perfumes].sort((a, b) => b.views - a.views);
     document.getElementById("topProductsMini").innerHTML = ranking.length ? ranking.slice(0, 5).map((item, index) => `
-      <div class="rank-item"><span class="rank-number">${index + 1}</span><div class="rank-copy"><b>${item.name}</b><small>${item.section === "perfume" ? "Perfumería" : "Ecuador"}</small></div><span class="rank-value">${fmt(item.views)}</span></div>`).join("") : `<p class="small-muted">Aún no hay vistas registradas.</p>`;
+      <div class="rank-item"><span class="rank-number">${index + 1}</span><div class="rank-copy"><b>${item.name}</b><small>${item.section === "perfume" ? "TELLISIOSO FRAGANCES" : "Ecuador"}</small></div><span class="rank-value">${fmt(item.views)}</span></div>`).join("") : `<p class="small-muted">Aún no hay vistas registradas.</p>`;
 
     const ecStats = sectionAnalytics(analytics, "ecuador");
     const pfStats = sectionAnalytics(analytics, "perfume");
@@ -61,7 +61,7 @@
     document.getElementById("linePerformance").innerHTML = `
       <div class="line-stat-row"><div><span class="line-dot ecuador"></span><b>Productos ecuatorianos</b></div><strong>${fmt(ecStats.item_views)} vistas</strong></div>
       <div class="line-track"><span class="line-fill ecuador" style="width:${ecStats.item_views / totalViews * 100}%"></span></div>
-      <div class="line-stat-row"><div><span class="line-dot perfume"></span><b>Perfumería</b></div><strong>${fmt(pfStats.item_views)} vistas</strong></div>
+      <div class="line-stat-row"><div><span class="line-dot perfume"></span><b>TELLISIOSO FRAGANCES</b></div><strong>${fmt(pfStats.item_views)} vistas</strong></div>
       <div class="line-track"><span class="line-fill perfume" style="width:${pfStats.item_views / totalViews * 100}%"></span></div>`;
 
     document.getElementById("recentActivity").innerHTML = analytics.top_searches.length ? analytics.top_searches.slice(0, 6).map((search) => `

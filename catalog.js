@@ -396,7 +396,7 @@
             PERFUME_PROMO_IMAGE;
 
           image.alt =
-            "Perfumería y fragancias de Remesas USA";
+            "TELLISIOSO FRAGANCES - Remesas USA";
 
           image.addEventListener(
             "load",
@@ -496,7 +496,7 @@
         image.alt =
           `${item.name} · ${
             isPerfume
-              ? "Perfumería"
+              ? "TELLISIOSO FRAGANCES"
               : "Productos ecuatorianos"
           } Remesas USA`;
 
@@ -1285,7 +1285,7 @@
 
     modalLine.textContent =
       isPerfume
-        ? "Perfumería"
+        ? "TELLISIOSO FRAGANCES"
         : "Productos ecuatorianos";
 
     modalLine.className =
@@ -1378,7 +1378,7 @@
       `¿Está disponible en el local de Watson Ave?`;
 
     whatsapp.href =
-      `https://wa.me/19292659222?text=${
+      `https://wa.me/15188981355?text=${
         encodeURIComponent(
           msg
         )

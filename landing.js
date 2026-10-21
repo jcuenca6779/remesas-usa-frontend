@@ -358,13 +358,13 @@
     setStaticImage(
       "heroImagePerfume",
       PERFUME_PROMO_IMAGE,
-      "Perfumería y fragancias de Remesas USA"
+      "TELLISIOSO FRAGANCES - Remesas USA"
     );
 
     setStaticImage(
       "choiceImagePerfume",
       PERFUME_PROMO_IMAGE,
-      "Perfumería selecta de Remesas USA"
+      "TELLISIOSO FRAGANCES - Remesas USA"
     );
 
     setLiveImage(
@@ -523,7 +523,7 @@
                     >
                       ${
                         isPerfume
-                          ? "✦ PERFUMERÍA"
+                          ? "✦ TELLISIOSO"
                           : "🇪🇨 ECUADOR"
                       }
                     </span>
